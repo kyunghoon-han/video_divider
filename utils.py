@@ -1,11 +1,17 @@
 import numpy as np
 import cv2 as cv
-import ffmpeg
+import subprocess
 import librosa
 
-def no_brain_divider(filename):
+def write_audio(filename,output_path,bit_rate="160k", 
+                sample_rate=44100, channel_num = 1):
+    command = "ffmpeg -i "
+    command = command + filename + " " # to read file
+    command = command + "-ab " + bit_rate # bit rate assignment
+    command = command + "-ac " + str(channel_num)
+
     in_video = ffmpeg.input(filename)
-    vid = in_video.hflip()
+    vid = in_video.video
     aud = in_video.audio
     return vid, aud
 
@@ -23,9 +29,9 @@ if __name__ == '__main__':
 
     vid, aud = no_brain_divider(filename)
 
-    print(type(vid))
+    print(vid[0])
     print()
-    print(type(aud))
+    print(aud)
 
     # First read the video
     #while True:
