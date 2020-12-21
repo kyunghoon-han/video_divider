@@ -21,6 +21,8 @@ def video_paths(dir_in, extension):
 def video_divider(file_path, output_dir, seconds=1.0,extension="npy", remove_tmp=True):
     # reads a video and saves the corresponding images 
     # and the audio files as numpy arrays
+    # the argument "seconds" stands for the number of 
+    # seconds for the file to be cut in
     if os.path.exists(output_dir):
         shutil.rmtree(output_dir)
         os.mkdir(output_dir)
