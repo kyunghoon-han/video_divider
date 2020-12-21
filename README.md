@@ -15,3 +15,14 @@ This file contains the following modules:
 - `
 ## 2. main.py
 This reads a video file and outputs a set of directories with a frame and its corresponding audio segment
+- `video_paths`
+	- returns a list of paths of the video files of given extension
+- `video_divider`
+	- divides the video in a number of different batches
+	- batches can be adjusted by setting the `second` value of the argument
+
+- arguments
+	- `--dir_in` : the directory to find where the potential video files are
+	- `--output` : output directory
+	- `--seconds`: number of seconds per subdirectory
+	- `--extension`: video file extension
