@@ -36,6 +36,7 @@ def frame_to_audio_matcher(fps,multiplier=1000):
 def audio_to_batches(audio, batch_size):
     audio = np.ndarray.flatten(audio).tolist()
     output_list = []
+    batch_size = round(batch_size)
     for i in range(0,len(audio),batch_size):
         tmp = audio[i:i+batch_size]
         diff_len = batch_size - len(tmp)

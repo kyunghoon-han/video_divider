@@ -1,6 +1,6 @@
 import argparse
 import numpy as np
-from utils import *
+import utils
 import cv2 as cv
 import librosa 
 import os, shutil
@@ -8,13 +8,13 @@ import os, shutil
 def video_paths(dir_in, extension):
     # returns the list of video files of interest 
     path_list = []
-    for (path, dir, files) in os.walk(dir_in):
-        path_so_far = os.path.join(path,dir)
-        for file in files:
-            if extension in file:
-                path_list.append(os.path.join(path_so_far,file))
+    path_so_far = dir_in
+    for (path, _, files) in os.walk(dir_in):
+        for a_file in files:
+            if extension in a_file:
+                path_list.append(os.path.join(path_so_far,a_file))
             else:
-                continue
+                continue 
     
     return path_list
 
@@ -25,9 +25,9 @@ def video_divider(file_path, output_dir, seconds=1.0,extension="npy", remove_tmp
     # seconds for the file to be cut in
     if os.path.exists(output_dir):
         shutil.rmtree(output_dir)
-        os.mkdir(output_dir)
+        os.makedirs(output_dir)
     else:
-        os.mkdir(output_dir)
+        os.makedirs(output_dir)
 
     video_in = cv.VideoCapture(file_path)
     fps = utils.frame_rate_calculator(video_in)
@@ -44,8 +44,8 @@ def video_divider(file_path, output_dir, seconds=1.0,extension="npy", remove_tmp
 
     # now cut the videos
     counter = 0
-    while switch:
-        for i in range(seconds * round(fps)):
+    while True:
+        for i in range(round(seconds * fps)):
             success, image = video_in.read()
             # resize the image
             image = image.reshape((1,image.shape[0], 
@@ -61,9 +61,9 @@ def video_divider(file_path, output_dir, seconds=1.0,extension="npy", remove_tmp
         save_dir_data = os.path.join(output_dir,str(counter))
         if os.path.exists(save_dir_data):
             shutil.remtree(save_dir_data)
-            os.mkdir(save_dir_data)
+            os.makedirs(save_dir_data)
         else:
-            os.mkdir(save_dir_data)
+            os.makedirs(save_dir_data)
         aud_address = os.path.join(save_dir_data,"audio.npy")
         img_address = os.path.join(save_dir_data,"image.npy")
 
@@ -83,22 +83,22 @@ def video_divider(file_path, output_dir, seconds=1.0,extension="npy", remove_tmp
 #   3. store the images and audio of same interval
 #           of the video in the same folder
 
-if __init__ == "__main__":
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-            description="Divide the input videos to its images/
-                         and the corresponding audios. \n /
-                         Input: a video file \n /
-                         Output: a set of folders with the following:\n /
-                         \t 1. images of certain duration \n/
-                         \t 2. its corresponding audio.")
+            description="Divide the input videos to its images" \
+                         "and the corresponding audios. \n" \
+                         "Input: video files \n" \
+                         "Output: a set of folders with the following:\n" \
+                         "\t 1. images of certain duration \n" \
+                         "\t 2. its corresponding audio.")
     parser.add_argument('--dir_in',help='directory of input videos')
-    parser.add_argument('--output',help='output directory')
+    parser.add_argument('--output_dir',help='output directory')
     parser.add_argument('--extension', help='extension of the video files')
     args = parser.parse_args()
     
     list_of_videos = video_paths(args.dir_in, args.extension)
     counter = 0
     for vid in list_of_videos:
-        name_folder = "section_"+str(counter)
+        name_folder = os.path.join(args.output_dir,"section_"+str(counter))
         video_divider(vid,name_folder)
         counter += 1
