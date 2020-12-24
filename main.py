@@ -60,7 +60,7 @@ def video_divider(file_path, output_dir, seconds=1.0,extension="npy", remove_tmp
         # name the directories to save the np arrays
         save_dir_data = os.path.join(output_dir,str(counter))
         if os.path.exists(save_dir_data):
-            shutil.remtree(save_dir_data)
+            shutil.rmtree(save_dir_data)
             os.makedirs(save_dir_data)
         else:
             os.makedirs(save_dir_data)
